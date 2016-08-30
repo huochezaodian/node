@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<script>
+	function ajax(url,fs,fe){
+		var oAjax=new XMLHttpRequest();
+		oAjax.open('GET',url,true);
+		oAjax.send();
+		oAjax.onreadystatechange=function(){
+			if(oAjax.readyState==4&&oAjax.status==200){
+				fs&&fs(oAjax.responseText);
+			}else{
+				fe&&fe(oAjax.status);
+			}
+		};
+	}
+	window.onload=function(){
+		var oBtn1=document.getElementById('btn1');
+		var oBtn2=document.getElementById('btn2');
+		var oBtn3=document.getElementById('btn3');
+		var oBtn4=document.getElementById('btn4');
+
+		oBtn3.onclick=function(){
+			ajax('login?username='+oBtn1.value+'&password='+oBtn2.value,
+				function(str){
+					var json=eval('('+str+')');
+					if(json.err){
+						alert('成功：'+json.msg);
+					}else{
+						alert('失败：'+json.msg);
+					}
+				},
+				function(){
+
+				});
+		};
+		oBtn4.onclick=function(){
+			ajax('register?username='+oBtn1.value+'&password='+oBtn2.value,
+				function(str){
+					var json=eval('('+str+')');
+					if(json.err){
+						alert('成功：'+json.msg);
+					}else{
+						alert('失败：'+json.msg);
+					}
+				},
+				function(){
+
+				});
+		};
+	};
+</script>
+</head>
+<body>
+	<br>
+	用户名：<input type="text" id="btn1">
+	<br>
+	密码：<input type="password" id="btn2">
+	<br>
+	<button id="btn3">登陆</button>
+	<button id="btn4">注册</button>
+</body>
+</html>

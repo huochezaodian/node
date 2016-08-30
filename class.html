@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<script>
+	class Person{
+		constructor(name,age){
+			this.name = name;
+			this.age = age;
+		}
+		showName(){
+			alert(this.name);
+		}
+		showAge(){
+			alert(this.age);
+		}
+	}
+	var oPerson = new Person('张三',12);
+	oPerson.showName();
+	oPerson.showAge();
+
+	class People extends Person{
+		constructor(name,age,address){
+			super(name,age);
+			this.address = address;
+		}
+		showAddress(){
+			alert(this.address);
+		}
+	}
+
+	var oPeople = new People('李四',18,'北京');
+	oPeople.showName();
+	oPeople.showAge();
+	oPeople.showAddress();
+</script>
+</head>
+<body>
+	
+</body>
+</html>

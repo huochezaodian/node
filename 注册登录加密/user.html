@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<script src="js/vue.js"></script>	
+<script src="js/vue-resource.js"></script>
+<script>
+window.onload=function(){
+	var v = new Vue({
+		el:'#box',
+		data:{
+			username:'',
+			password:''
+		},
+		methods:{
+			add:function(){
+				this.$http.get('user',{
+					act:'add',
+					username:this.username,
+					password:this.password
+				}).then(function(res){
+					alert(JSON.stringify(res.data));
+				},function(err){
+					console.log(err);
+				});
+			},
+			login:function(){
+				this.$http.get('user',{
+					act:'login',
+					username:this.username,
+					password:this.password
+				}).then(function(res){
+					alert(JSON.stringify(res.data));
+				},function(err){
+					console.log(err);
+				});
+			}
+		}
+	});	
+};
+</script>
+</head>
+<body id="box">
+	<h2>用户注册登陆</h2>
+	user：
+	<input type="text" v-model="username">
+	<br>
+	pass：
+	<input type="password" v-model="password">
+	<br>
+	<button v-on:click="add()">注册</button>
+	<button @click="login()">登陆</button>
+</body>
+</html>
