@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+</head>
+<script src="./js/jquery-1.11.1.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<body>
+<div class="container">
+    <div class="row" style="margin-top:15px;">
+
+        <!-- 聊天区 -->
+        <div class="col-sm-8">
+            <!-- 聊天内容 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    &nbsp;聊天内容
+                </div>
+                <div class="panel-body chat-body">
+                    <div class="msg-list-body">
+                          <!--<div class="clearfix msg-wrap">-->
+                        <!--<div class="msg-head">-->
+                        <!--<span class="msg-name label label-primary pull-left">-->
+                        <!--<span class="glyphicon glyphicon-user"></span>-->
+                        <!--&nbsp;Sc千寻-->
+                        <!--</span>-->
+                        <!--<span class="msg-time label label-default pull-left">-->
+                        <!--<span class="glyphicon glyphicon-time"></span>-->
+                        <!--&nbsp;21:34:15-->
+                        <!--</span>-->
+                        <!--</div>-->
+                        <!--<div class="msg-content">test</div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 输入框 -->
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control" id="input-edit" placeholder="请输入聊天内容">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                        发送
+                    </button>
+                </span>
+            </div>
+        </div>
+
+        <!-- 个人信息 -->
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    &nbsp;个人信息
+                </div>
+                <div class="panel-body">
+                    <div class="col-sm-9"><h5 id="my-nickname">昵称：还未设置</h5></div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-default">修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 在线列表 -->
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    &nbsp;在线名单
+                </div>
+                <div class="panel-body list-body">
+                    <table class="table table-hover list-table">
+                        <!--<tr>-->
+                        <!--<td>test</td>-->
+                        <!--</tr>-->
+                    </table>
+                </div>
+                <div class="panel-footer" id="list-count">当前在线：0人</div>
+            </div>
+        </div>
+    </div>
+</div>	
+</body>
+</html>

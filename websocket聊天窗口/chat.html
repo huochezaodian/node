@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>未连接</title>
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+<style>
+div.container{margin-top: 150px;}
+div.chat{margin-top: 0;display: none;}
+div.form-group:after{content: '';display: inline-block;clear: both;}
+div.form-group input{display: inline-block;width: inherit;}
+div.form-group button{margin: 0 10px;}
+div.form-group{text-align: center;}
+label{text-align: right;margin-top: 5px;font-size: 18px; font-weight: normal;}
+.chat-body{overflow-y:scroll;height:555px;padding:0px;}
+.list-body{overflow-y:scroll;height:450px;padding:0px;}
+.msg-list-body{margin:8px;}
+.msg-wrap{margin-top: 0px;margin-bottom: 8px;padding: 0px;}
+.msg-content{margin-top: 14px;padding: 8px;padding-bottom: 4px;background-color:#f5f5f5;border:1px solid #ccc;border-radius: 4px;word-break:break-all;}
+.msg-head{z-index:100;}
+.msg-name{margin-left: 8px;}
+.msg-time{ margin-left: 8px;}
+.list-table{margin-top: -1px; margin-bottom: 0px;}
+</style>
+<script src="http://localhost:8081/socket.io/socket.io.js"></script>
+<script src="./js/jquery-1.11.1.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script>
+$(function(){
+	var $title = $('#dialog p');
+	var title = document.getElementsByTagName('title')[0];
+	var sock = io.connect('ws://localhost:8081/');
+
+	sock.on('connect',function(){
+		title.innerHTML = '已连接';
+	});
+	sock.on('disconnect',function(){
+		title.innerHTML = '未连接';
+		if(sock.username){
+			sock.emit('delete',sock.username);
+		}
+	});
+
+	sock.on('reg_result',function(data){
+		$title.html(data.msg);
+	});
+
+	sock.on('login_result',function(data){
+		$title.html(data.msg);
+		if(!data.err){
+			$('#my-nickname').html('昵称：'+$('#username').val());
+			$('.login').css({
+				'display': 'none'
+			});
+			$('.chat').css({
+				'display': 'block'
+			});
+		}
+	});
+
+	sock.on('total_users',function(users){
+		var str = '';
+		users.map(function(elem) {
+			str+='<tr><td>'+elem+'</td></tr>';
+		})
+		$('.panel-body .list-table').html(str);
+		$('#list-count').html('当前在线：'+users.length+'人');
+	});
+
+	sock.on('speak',function(data){
+		var str = $('.chat-body').html();
+		str +=	'<div class="msg-list-body">'+
+                    '<div class="clearfix msg-wrap">'+
+	                    '<div class="msg-head">'+
+		                    '<span class="msg-name label label-primary pull-left">'+
+		                    	'&nbsp;'+data.from+
+		                    '</span>'+
+		                    '<span class="msg-time label label-default pull-left">'+
+		                    	'&nbsp;'+getMyDate(data.time)+
+		                    '</span>'+
+	                    '</div>'+
+                    	'<div class="msg-content">'+data.msg+'</div>'+
+                    '</div>'+
+                '</div>';
+        $('.chat-body').html(str);
+	});
+
+	$("button:contains('注册')").click(function(event) {
+		sock.emit('reg',$('#username').val(),$('#password').val());
+	});
+
+	$("button:contains('登陆')").click(function(event) {
+		sock.emit('login',$('#username').val(),$('#password').val());
+	});
+
+	$("button:contains('发送')").click(function(event) {
+		sock.emit('speak',$("#input-edit").val());
+	});
+
+ 	function getMyDate(str){  
+	    var oDate = new Date(str),  
+	    oYear = oDate.getFullYear(),  
+	    oMonth = oDate.getMonth()+1,  
+	    oDay = oDate.getDate(),  
+	    oHour = oDate.getHours(),  
+	    oMin = oDate.getMinutes(),  
+	    oSen = oDate.getSeconds(),  
+	    oTime = oYear +'-'+ toDou(oMonth) +'-'+ toDou(oDay) +' '+ toDou(oHour) +':'+ toDou(oMin) +':'+toDou(oSen);//最后拼接时间  
+	    return oTime;  
+	};  
+	//补0操作  
+	function toDou(num){  
+	    if(parseInt(num) < 10){  
+	        num = '0'+num;  
+	    }  
+	    return num;  
+	}  	
+	});
+</script>
+</head>
+<body>
+	<div class="container login">
+		<form role="form">
+			<div class="form-group">
+				<label for="username">用户名:</label>
+				<input type="text" id="username" class="form-control" placeholder="请输入用户名">
+			</div>
+			<div class="form-group">
+				<label for="password">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
+				<input type="text" id="password" class="form-control" placeholder="请输入密码">
+			</div>
+		</form>
+		<div class="form-group">	
+			<button class="btn btn-primary" data-toggle="modal" data-target="#dialog" >登陆</button>
+			<button class="btn btn-primary" data-toggle="modal" data-target="#dialog" >注册</button>
+		</div>
+	</div>
+	<div class="container chat">
+	    <div class="row" style="margin-top:15px;">
+	        <!-- 聊天区 -->
+	        <div class="col-sm-8">
+	            <!-- 聊天内容 -->
+	            <div class="panel panel-default">
+	                <div class="panel-heading">
+	                    &nbsp;聊天内容
+	                </div>
+	                <div class="panel-body chat-body">
+	                   <!--  <div class="msg-list-body">
+	                        <div class="clearfix msg-wrap">
+	                        <div class="msg-head">
+	                        <span class="msg-name label label-primary pull-left">
+	                        &nbsp;Sc千寻
+	                        </span>
+	                        <span class="msg-time label label-default pull-left">
+	                        &nbsp;21:34:15
+	                        </span>
+	                        </div>
+	                        <div class="msg-content">test</div>
+	                        </div>
+	                    </div> -->
+	                </div>
+	            </div>
+
+	            <!-- 输入框 -->
+	            <div class="input-group input-group-lg">
+	                <input type="text" class="form-control" id="input-edit" placeholder="请输入聊天内容">
+	                <span class="input-group-btn">
+	                    <button class="btn btn-default" type="button">
+	                        发送
+	                    </button>
+	                </span>
+	            </div>
+	        </div>
+
+	        <!-- 个人信息 -->
+	        <div class="col-sm-4">
+	            <div class="panel panel-default">
+	                <div class="panel-heading">
+	                    &nbsp;个人信息
+	                </div>
+	                <div class="panel-body">
+	                    <div><h5 id="my-nickname">昵称：</h5></div>
+	                </div>
+	            </div>
+	        </div>
+	        <!-- 在线列表 -->
+	        <div class="col-sm-4">
+	            <div class="panel panel-default">
+	                <div class="panel-heading">
+	                    &nbsp;在线名单
+	                </div>
+	                <div class="panel-body list-body">
+	                    <table class="table table-hover list-table">
+	                        <!-- <tr>
+	                        	<td>test</td>
+	                        </tr> -->
+	                    </table>
+	                </div>
+	                <div class="panel-footer" id="list-count">当前在线：0人</div>
+	            </div>
+	        </div>
+	    </div>
+	</div>	
+	<div id="dialog" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p style="font-size:26px;margin:26px 0;">模态信息</p>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-warning" data-dismiss="modal">确认</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
